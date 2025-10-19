@@ -1,10 +1,10 @@
 #pragma once
+
 #include<iostream>
-#include<vectorpoints.h>
+#include<vector_points.h>
 
 class Figure {
 public:
-    Vectorpoints v;
     Figure();
     virtual ~Figure();
     void ReadPoints(std::istream&);
@@ -13,8 +13,9 @@ public:
     friend bool operator==(Figure, Figure);
     friend bool operator!=(Figure, Figure);
 protected:
-    long double CalcArea(const Vectorpoints&) const;
-    Point CalcCentr(const Vectorpoints&) const;
+    VectorPoints v;
+    long double CalcArea(const VectorPoints&) const;
+    Point CalcCentr(const VectorPoints&) const;
 };
 std::istream& operator>>(std::istream&, Figure&);
 std::ostream& operator<<(std::ostream&, Figure&);
