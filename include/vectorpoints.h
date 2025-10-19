@@ -1,8 +1,9 @@
 #pragma once
+
 #include <iostream>
 #include<point.h>
 
-class Vectorpoints {
+class VectorPoints {
 private:
   size_t size;
   size_t capacity;
@@ -18,9 +19,9 @@ public:
 
   size_t len() const;
 
-  Vectorpoints(Vectorpoints&&) noexcept;
-  Vectorpoints(const Vectorpoints&);
-  Vectorpoints();
-  Vectorpoints(size_t);
-  ~Vectorpoints();
+  VectorPoints(VectorPoints&&) noexcept;
+  VectorPoints(const VectorPoints&);
+  VectorPoints();
+  VectorPoints(size_t);
+  ~VectorPoints();
 };
