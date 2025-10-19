@@ -2,8 +2,6 @@
 #include<iostream>
 #include<vectorpoints.h>
 
-using namespace std;
-
 class Figure {
 public:
     Vectorpoints v;
