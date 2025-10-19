@@ -1,22 +1,22 @@
-#include<vectorfigure.h>
+#include<vector_figure.h>
 #include<figure.h>
 
-Vectorfigure::Vectorfigure() : size(0), capacity(1), v(new Figure*[capacity]) {}
+VectorFigure::VectorFigure() : size(0), capacity(1), v(new Figure*[capacity]) {}
 
-Vectorfigure::Vectorfigure(const Vectorfigure& other)
+VectorFigure::VectorFigure(const VectorFigure& other)
     : size(other.size), capacity(other.capacity),
       v(new Figure*[capacity]) {
   std::copy(other.v, other.v + size, v);
 }
 
-Vectorfigure::Vectorfigure(Vectorfigure&& other) noexcept
+VectorFigure::VectorFigure(VectorFigure&& other) noexcept
     : size(other.size), capacity(other.capacity), v(other.v) {
   other.clear();
 }
 
-Vectorfigure::~Vectorfigure() { delete[] v; }
+VectorFigure::~VectorFigure() { delete[] v; }
 
-void Vectorfigure::resize(size_t newsize) {
+void VectorFigure::resize(size_t newsize) {
   capacity = newsize;
   Figure** t = new Figure*[capacity];
   std::copy(v, v + size, t);
@@ -24,31 +24,31 @@ void Vectorfigure::resize(size_t newsize) {
   v = t;
 }
 
-void Vectorfigure::erase(size_t ind) {
+void VectorFigure::erase(size_t ind) {
   for (size_t i = ind; i < size; ++i) {
     v[i] = v[i + 1];
   }
   --size;
 }
 
-void Vectorfigure::push(Figure* c) {
+void VectorFigure::push(Figure* c) {
   if (size >= capacity) {
     resize(2 * capacity);
   }
   v[size++] = c;
 }
 
-void Vectorfigure::pop() {
+void VectorFigure::pop() {
   if (size) {
     --size;
   }
 }
 
-Figure* Vectorfigure::get(size_t i) { return v[i]; }
+Figure* VectorFigure::get(size_t i) { return v[i]; }
 
-size_t Vectorfigure::len() { return size; }
+size_t VectorFigure::len() { return size; }
 
-void Vectorfigure::clear() {
+void VectorFigure::clear() {
   size = 0;
   capacity = 1;
   delete[] v;
