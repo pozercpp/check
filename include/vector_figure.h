@@ -1,8 +1,9 @@
 #pragma once
+
 #include <iostream>
 #include<figure.h>
 
-class Vectorfigure {
+class VectorFigure {
 private:
   size_t size;
   size_t capacity;
@@ -18,8 +19,8 @@ public:
   
   size_t len();
 
-  Vectorfigure(Vectorfigure&&) noexcept;
-  Vectorfigure(const Vectorfigure&);
-  Vectorfigure();
-  ~Vectorfigure();
+  VectorFigure(VectorFigure&&) noexcept;
+  VectorFigure(const VectorFigure&);
+  VectorFigure();
+  ~VectorFigure();
 };
