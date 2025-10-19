@@ -3,9 +3,9 @@
 #include<octagon.h>
 #include<square.h>
 #include<triangle.h>
-#include<vectorfigure.h>
+#include<vector_figure.h>
 int main() {
-    Vectorfigure v;
+    VectorFigure v;
     std::cout << "INPUT VECTOR SIZE ";
     int n;
     std::cin >> n;
@@ -21,7 +21,7 @@ int main() {
         } else if (c == '3') {
             f = new Triangle();
         } else {
-            std::cout << endl;
+            std::cout << std::endl;
         }
         std::cin >> *f;
         v.push(f);
