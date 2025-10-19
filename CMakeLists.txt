@@ -11,22 +11,13 @@ set(MAIN_SOURCE
 set(LIB_SOURCES
     src/point.cpp
     src/figure.cpp
-    src/vectorpoints.cpp
-    src/vectorfigure.cpp
+    src/vector_points.cpp
+    src/vector_figure.cpp
     src/octagon.cpp
     src/square.cpp
     src/triangle.cpp
 )
 
-set(HEADERS
-    include/point.h
-    include/figure.h
-    include/vectorpoints.h
-    include/vectorfigure.h
-    include/octagon.h
-    include/square.h
-    include/triangle.h
-)
 add_executable(geometry_figures ${MAIN_SOURCE} ${LIB_SOURCES} ${HEADERS})
 target_include_directories(geometry_figures PRIVATE include)
 target_compile_features(geometry_figures PRIVATE cxx_std_20)
