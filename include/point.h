@@ -1,25 +1,32 @@
 #pragma once
 #include <iostream>
 
+template<class T> class Point;
+
+template<class T>
+std::istream& operator>>(std::istream&, Point<T>&);
+
+template<class T>
+std::ostream& operator<<(std::ostream&, const Point<T>&);
+
+template<class T>
+bool operator==(const Point<T>&, const Point<T>&);
+
+template<class T>
+bool operator!=(const Point<T>&, const Point<T>&);
+
 template<class T> 
 class Point {
 public:
     T x, y;
 
-    Point() : x(0), y(0) {}
+    Point();
+    Point(T, T);
     
-    Point(T x_, T y_) : x(x_), y(y_) {}
-    
-    friend std::istream& operator>>(std::istream& is, Point<T>& p) {
-        is >> p.x >> p.y;
-        return is;
-    }
-    
-    friend std::ostream& operator<<(std::ostream& os, const Point<T>& p) {
-        os << '(' << p.x << ' ' << p.y << ')';
-        return os;
-    }
-    
-    friend bool operator==(const Point<T>& a, const Point<T>& b) { return a.x == b.x && a.y == b.y; } 
-    friend bool operator!=(const Point<T>& a, const Point<T>& b) { return !(a == b); }
+    friend std::istream& operator>> <>(std::istream&, Point<T>&);
+    friend std::ostream& operator<< <>(std::ostream&, const Point<T>&);
+    friend bool operator== <>(const Point<T>&, const Point<T>&);
+    friend bool operator!= <>(const Point<T>&, const Point<T>&);
 };
+
+#include <point.ipp>

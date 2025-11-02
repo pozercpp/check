@@ -11,12 +11,12 @@ set(MAIN_SOURCE
 )
 
 set(HEADERS
-    include/array.h
-    include/point.h
-    include/figure.h
-    include/five.h
-    include/six.h
-    include/eight.h
+    include/array.ipp
+    include/point.ipp
+    include/figure.ipp
+    include/five.ipp
+    include/six.ipp
+    include/eight.ipp
 )
 
 add_executable(geometry_figures ${MAIN_SOURCE})
@@ -38,7 +38,6 @@ add_executable(figure_tests test/figure_test.cpp)
 target_include_directories(figure_tests PRIVATE include)
 target_compile_features(figure_tests PRIVATE cxx_std_20)
 target_link_libraries(figure_tests GTest::gtest GTest::gtest_main)
-
 
 add_executable(all_tests ${TEST_SOURCES})
 target_include_directories(all_tests PRIVATE include)
