@@ -5,12 +5,12 @@
 template<class T> 
 class Array {
     size_t sz, cap;
-    T* v;
+    std::shared_ptr<T[]> v;
 
 public:
     Array();
     Array(size_t);
-    Array(size_t, T);
+    Array(size_t, const T&);
     Array(const std::initializer_list<T>&);
     Array(const Array&);
     Array(Array&&) noexcept;
