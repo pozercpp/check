@@ -18,7 +18,7 @@ Array<T>::Array(size_t n, const T& elem) : sz(n), cap(n > 0 ? 4 * n : 1), v(new 
 }
 
 template<class T>
-Array<T>::~Array() {}
+Array<T>::~Array() = default;
 
 template<class T>
 Array<T>::Array(const std::initializer_list<T>& lst) : sz(0), cap(1), v(new T[cap], deleter) {
