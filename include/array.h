@@ -6,6 +6,9 @@ template<class T>
 class Array {
     size_t sz, cap;
     std::shared_ptr<T[]> v;
+    inline static auto deleter = [](T* ptr) {
+        delete[] ptr;
+    };
 
 public:
     Array();
