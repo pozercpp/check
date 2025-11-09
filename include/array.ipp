@@ -5,13 +5,13 @@
 #include <array.h>
 
 template<class T>
-Array<T>::Array() : sz(0), cap(1), v(std::make_shared<T[]>(cap)) {}
+Array<T>::Array() : sz(0), cap(1), v(new T[cap], deleter) {}
 
 template<class T>
-Array<T>::Array(size_t n) : sz(n), cap(n > 0 ? 4 * n : 1), v(std::make_shared<T[]>(cap)) {}
+Array<T>::Array(size_t n) : sz(n), cap(n > 0 ? 4 * n : 1), v(new T[cap], deleter) {}
 
 template<class T>
-Array<T>::Array(size_t n, const T& elem) : sz(n), cap(n > 0 ? 4 * n : 1), v(std::make_shared<T[]>(cap)) {
+Array<T>::Array(size_t n, const T& elem) : sz(n), cap(n > 0 ? 4 * n : 1), v(new T[cap], deleter) {
     for (size_t i = 0; i < sz; ++i) {
         v[i] = elem;
     }
@@ -21,14 +21,14 @@ template<class T>
 Array<T>::~Array() {}
 
 template<class T>
-Array<T>::Array(const std::initializer_list<T>& lst) : sz(0), cap(1), v(std::make_shared<T[]>(cap)) {
+Array<T>::Array(const std::initializer_list<T>& lst) : sz(0), cap(1), v(new T[cap], deleter) {
     for (const T& elem : lst) { 
         push(elem); 
     }
 }
 
 template<class T>
-Array<T>::Array(const Array& other) : sz(other.sz), cap(other.cap), v(std::make_shared<T[]>(cap)) {
+Array<T>::Array(const Array& other) : sz(other.sz), cap(other.cap), v(new T[cap], deleter) {
     std::copy(other.v.get(), other.v.get() + sz, v.get());
 }
 
@@ -43,7 +43,7 @@ Array<T>& Array<T>::operator=(const Array& other) {
     if (this != &other) {
         sz = other.sz;
         cap = other.cap;
-        v = std::make_shared<T[]>(cap);
+        v = std::shared_ptr<T[]>(new T[cap], deleter);
         std::copy(other.v.get(), other.v.get() + sz, v.get());
     }
     return *this;
@@ -64,10 +64,13 @@ Array<T>& Array<T>::operator=(Array&& other) noexcept {
 
 template<class T>
 void Array<T>::resize(size_t newsize) {
-    auto new_v = std::make_shared<T[]>(newsize);
-    std::copy(v.get(), v.get() + sz, new_v.get());
+    auto new_v = std::shared_ptr<T[]>(new T[newsize], deleter);
+    std::copy(v.get(), v.get() + std::min(sz, newsize), new_v.get());
     v = new_v;
     cap = newsize;
+    if (sz > newsize) {
+        sz = newsize;
+    }
 }
 
 template<class T>
