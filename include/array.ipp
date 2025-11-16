@@ -11,21 +11,21 @@ Array<T, Alloc>::Array(size_t size, const Alloc& a) : alloc(a) { resize(size); }
 template<class T, class Alloc>
 Array<T, Alloc>::Array(size_t size, const T& value, const Alloc& a) : alloc(a) {
     reserve(size);
-    std::uninitialized_fill_n(v, size, value);
+    std::fill(v, size, value);
     sz = size;
 }
 
 template<class T, class Alloc>
 Array<T, Alloc>::Array(const std::initializer_list<T>& lst, const Alloc& a) : alloc(a) {
     reserve(lst.size());
-    std::uninitialized_copy(lst.begin(), lst.end(), v);
+    std::copy(lst.begin(), lst.end(), v);
     sz = lst.size();
 }
 
 template<class T, class Alloc>
 Array<T, Alloc>::Array(const Array& other) : alloc(traits::select_on_container_copy_construction(other.alloc)) {
     reserve(other.sz);
-    std::uninitialized_copy(other.v, other.v + other.sz, v);
+    std::copy(other.v, other.v + other.sz, v);
     sz = other.sz;
 }
 
@@ -56,7 +56,7 @@ void Array<T, Alloc>::reserve(size_t new_cap) {
     if (new_cap <= cap) return;
     T* new_v = traits::allocate(alloc, new_cap);
     if (v) {
-        std::uninitialized_move(v, v + sz, new_v);
+        std::move(v, v + sz, new_v);
         for (size_t i = 0; i < sz; ++i) { traits::destroy(alloc, v + i); }
         traits::deallocate(alloc, v, cap);
     }
@@ -113,7 +113,7 @@ Array<T, Alloc>& Array<T, Alloc>::operator=(const Array& other) {
             cap = other.sz;
             v = traits::allocate(alloc, cap);
         }
-        std::uninitialized_copy(other.v, other.v + other.sz, v);
+        std::copy(other.v, other.v + other.sz, v);
         sz = other.sz;
         if (traits::propagate_on_container_copy_assignment::value) {
             alloc = other.alloc;
