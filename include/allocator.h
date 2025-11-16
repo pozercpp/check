@@ -9,7 +9,7 @@
 
 class Allocator : public std::pmr::memory_resource {
 public:
-    explicit Allocator(size_t);
+    Allocator(size_t);
     ~Allocator() noexcept;
 
     Allocator(const Allocator&) = delete;
