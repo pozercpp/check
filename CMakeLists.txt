@@ -1,45 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
-project(GeometryFigures VERSION 1.0 LANGUAGES CXX)
+project(CustomArrayProject)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-find_package(GTest REQUIRED)
+# Директории для include (если headers в include/)
+include_directories(include)
 
-set(MAIN_SOURCE
-    src/main.cpp
-)
+# Добавляем исходники библиотеки (allocator.cpp в src/)
+add_library(allocator STATIC src/allocator.cpp)
 
-set(HEADERS
-    include/array.ipp
-    include/point.ipp
-    include/figure.ipp
-    include/five.ipp
-    include/six.ipp
-    include/eight.ipp
-)
+# Указываем include для библиотеки
+target_include_directories(allocator PUBLIC include .)  # Если headers в include или корне
 
-add_executable(geometry_figures ${MAIN_SOURCE})
-target_include_directories(geometry_figures PRIVATE include)
-target_compile_features(geometry_figures PRIVATE cxx_std_20)
+# Добавляем executable с main (main.cpp в src/)
+add_executable(main src/main.cpp)  # Теперь ищет в src/
 
-set(TEST_SOURCES
-    test/tests.cpp
-    test/array_test.cpp
-    test/figure_test.cpp
-)
-
-add_executable(array_tests test/array_test.cpp)
-target_include_directories(array_tests PRIVATE include)
-target_compile_features(array_tests PRIVATE cxx_std_20)
-target_link_libraries(array_tests GTest::gtest GTest::gtest_main)
-
-add_executable(figure_tests test/figure_test.cpp)
-target_include_directories(figure_tests PRIVATE include)
-target_compile_features(figure_tests PRIVATE cxx_std_20)
-target_link_libraries(figure_tests GTest::gtest GTest::gtest_main)
-
-add_executable(all_tests ${TEST_SOURCES})
-target_include_directories(all_tests PRIVATE include)
-target_compile_features(all_tests PRIVATE cxx_std_20)
-target_link_libraries(all_tests GTest::gtest GTest::gtest_main)
+# Линкуем main с библиотекой
+target_link_libraries(main PRIVATE allocator)
+target_include_directories(main PRIVATE include .)  # Для array.h, allocator.h и т.д.
