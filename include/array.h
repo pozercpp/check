@@ -71,7 +71,7 @@ public:
 
     public:
         const_iterator(pointer ptr = nullptr) : m_ptr(ptr) {}
-        const_iterator(const iterator& it) : m_ptr(it.m_ptr) {}  // Allow conversion from non-const
+        const_iterator(const iterator& it) : m_ptr(it.m_ptr) {}
 
         reference operator*() const { return *m_ptr; }
         pointer operator->() const { return m_ptr; }
