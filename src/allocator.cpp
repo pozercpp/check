@@ -16,10 +16,10 @@ void* Allocator::do_allocate(size_t bytes, size_t alignment) {
     char* start = buffer;
     char* end = buffer + size;
     for (auto it = allocated_blocks.begin(); it != allocated_blocks.end(); ++it) {
-        char* gap_end = static_cast<char*>(it->first);
-        if (gap_end - start >= static_cast<ptrdiff_t>(bytes)) {
-            void* aligned_ptr = start;
-            size_t space = gap_end - start;
+        auto cur = static_cast<char*>(it->first) - static_cast<char*>(start);
+        if (cur >= static_cast<std::ptrdiff_t>(bytes)) {
+            auto aligned_ptr = static_cast<void*>(start);
+            auto space = static_cast<size_t>(cur);
             if (std::align(alignment, bytes, aligned_ptr, space)) {
                 auto insert_it = allocated_blocks.begin();
                 while (insert_it != allocated_blocks.end() && insert_it->first < aligned_ptr) { ++insert_it; }
@@ -29,11 +29,14 @@ void* Allocator::do_allocate(size_t bytes, size_t alignment) {
         }
         start = static_cast<char*>(it->first) + it->second;
     }
-    if (end - start >= static_cast<ptrdiff_t>(bytes)) {
-        void* aligned_ptr = start;
-        size_t space = end - start;
+    auto cur = static_cast<char*>(end) - static_cast<char*>(start);
+    if (cur >=  static_cast<ptrdiff_t>(bytes)) {
+        auto aligned_ptr = static_cast<void*>(start);
+        auto space = static_cast<size_t>(cur);
         if (std::align(alignment, bytes, aligned_ptr, space)) {
-            allocated_blocks.push_back({aligned_ptr, bytes});
+            auto insert_it = allocated_blocks.begin();
+            while (insert_it != allocated_blocks.end() && insert_it->first < aligned_ptr) { ++insert_it; }
+            allocated_blocks.insert(insert_it, {aligned_ptr, bytes});
             return aligned_ptr;
         }
     }

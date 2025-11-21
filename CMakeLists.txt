@@ -1,21 +1,22 @@
-cmake_minimum_required(VERSION 3.10)
-project(CustomArrayProject)
+cmake_minimum_required(VERSION 3.14)
+project(CustomArrayProject LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Директории для include (если headers в include/)
 include_directories(include)
 
-# Добавляем исходники библиотеки (allocator.cpp в src/)
 add_library(allocator STATIC src/allocator.cpp)
+target_include_directories(allocator PUBLIC include)
 
-# Указываем include для библиотеки
-target_include_directories(allocator PUBLIC include .)  # Если headers в include или корне
-
-# Добавляем executable с main (main.cpp в src/)
-add_executable(main src/main.cpp)  # Теперь ищет в src/
-
-# Линкуем main с библиотекой
+add_executable(main src/main.cpp)
 target_link_libraries(main PRIVATE allocator)
-target_include_directories(main PRIVATE include .)  # Для array.h, allocator.h и т.д.
+
+enable_testing()
+
+add_executable(tests test/test.cpp src/allocator.cpp)
+target_link_libraries(tests PRIVATE gtest_main gtest allocator)
+target_include_directories(tests PRIVATE include)
+
+add_test(NAME AllocatorAndArrayTests COMMAND tests)

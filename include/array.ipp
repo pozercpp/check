@@ -11,7 +11,7 @@ Array<T, Alloc>::Array(size_t size, const Alloc& a) : alloc(a) { resize(size); }
 template<class T, class Alloc>
 Array<T, Alloc>::Array(size_t size, const T& value, const Alloc& a) : alloc(a) {
     reserve(size);
-    std::fill(v, size, value);
+    std::uninitialized_fill_n(v, size, value);
     sz = size;
 }
 
@@ -107,17 +107,12 @@ Array<T, Alloc>& Array<T, Alloc>::operator=(const Array& other) {
     if (this != &other) {
         clear();
         if (cap < other.sz) {
-            if (v) {
-                traits::deallocate(alloc, v, cap);
-            }
+            if (v) traits::deallocate(alloc, v, cap);
             cap = other.sz;
             v = traits::allocate(alloc, cap);
         }
-        std::copy(other.v, other.v + other.sz, v);
+        std::uninitialized_copy(other.v, other.v + other.sz, v);
         sz = other.sz;
-        if (traits::propagate_on_container_copy_assignment::value) {
-            alloc = other.alloc;
-        }
     }
     return *this;
 }
@@ -130,46 +125,11 @@ Array<T, Alloc>& Array<T, Alloc>::operator=(Array&& other) noexcept {
         sz = other.sz;
         cap = other.cap;
         v = other.v;
-        alloc = std::move(other.alloc);
+        alloc.~Alloc();
+        new (&alloc) Alloc(other.alloc);
         other.sz = 0;
         other.cap = 0;
         other.v = nullptr;
     }
     return *this;
 }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::iterator Array<T, Alloc>::begin() noexcept { return v; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::iterator Array<T, Alloc>::end() noexcept { return v + sz; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_iterator Array<T, Alloc>::begin() const noexcept { return v; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_iterator Array<T, Alloc>::end() const noexcept { return v + sz; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_iterator Array<T, Alloc>::cbegin() const noexcept { return v; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_iterator Array<T, Alloc>::cend() const noexcept { return v + sz; }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::reverse_iterator Array<T, Alloc>::rbegin() noexcept { return reverse_iterator(end()); }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::reverse_iterator Array<T, Alloc>::rend() noexcept { return reverse_iterator(begin()); }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_reverse_iterator Array<T, Alloc>::rbegin() const noexcept { return const_reverse_iterator(end()); }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_reverse_iterator Array<T, Alloc>::rend() const noexcept { return const_reverse_iterator(begin()); }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_reverse_iterator Array<T, Alloc>::crbegin() const noexcept { return const_reverse_iterator(end()); }
-
-template<class T, class Alloc>
-typename Array<T, Alloc>::const_reverse_iterator Array<T, Alloc>::crend() const noexcept { return const_reverse_iterator(begin()); }
