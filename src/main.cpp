@@ -1,44 +1,31 @@
-#include<iostream>
-#include<memory>
+#include <iostream>
+#include <memory_resource>
 
 #include<array.h>
-#include<figure.h>
-#include<five.h>
-#include<six.h>
-#include<eight.h>
+#include<allocator.h>
 
 int main() {
-    std::cout << "INPUT VECTOR SIZE ";
+    Allocator pool(1024 * 1024);
+    std::pmr::polymorphic_allocator<int> pmr_alloc(&pool);
     int n;
     std::cin >> n;
-    std::cin.ignore();
-    Array<std::shared_ptr<Figure<double>>> figures;
-    std::cout << "5-Five\n6-Six\n8-Eight" << std::endl;
-    for (int i = 0; i < n; ++i) {
-        char c;
-        std::cin >> c;
-        std::cin.ignore();
-        std::shared_ptr<Figure<double>> f;
-        if (c == '5') {
-            f = std::make_shared<Five<double>>();
-        } else if (c == '6') {
-            f = std::make_shared<Six<double>>();
-        } else if (c == '8') {
-            f = std::make_shared<Eight<double>>();
-        } else {
-            std::cout << "ERROR" << std::endl;
-            break;
-        }
-        std::cin >> *f;
-        figures.push(f);
+    Array<int, std::pmr::polymorphic_allocator<int>> arr(n, pmr_alloc);
+    for (auto& i : arr) {
+        std::cin >> i;
     }
-    long double res{0.0};
-    for (int i = 0; i < figures.size(); ++i) {
-        auto fig = figures[i];
-        res += fig->Area();
-        std::cout << fig->Centr() << ' ';
+    for (auto& i : arr) {
+        std::cout << i << " ";
+    }
+    std::reverse(arr.begin(), arr.end());
+    std::cout << std::endl;
+    for (auto& i : arr) {
+        std::cout << i << " ";
     }
     std::cout << std::endl;
-    std::cout << res << std::endl;
+    std::sort(arr.begin(), arr.end());
+    for (auto& i : arr) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
     return 0;
 }
